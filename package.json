@@ -1,0 +1,23 @@
+{
+  "name": "jsdeepdive",
+  "version": "1.0.0",
+  "description": "Modern_Javascript_Deep_Dive",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuroneko-s/JS-DeepDive-S.git"
+  },
+  "keywords": [
+    "JS",
+    "javascript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kuroneko-s/JS-DeepDive-S/issues"
+  },
+  "homepage": "https://github.com/kuroneko-s/JS-DeepDive-S#readme"
+}
