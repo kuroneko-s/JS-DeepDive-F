@@ -129,16 +129,121 @@ let regexp = /is/gi;
 
 // 값을 안넘겨줬으니 추상 연산 OrdinaryObjectCreate를 내부적으로 호출하여 빈 객체를 생성
 obj = new Object();
-console.log(obj);
+// console.log(obj);
 
 // instance -> Foo2.prototype -> Object.prototype 프로토타입 체인이 생성.
 class Foo2 extends Object {}
 new Foo2(); // Foo {}
 
 obj = new Object(123);
-console.log(obj); // Number {123}
+// console.log(obj); // Number {123}
 
 obj = new Object("123");
-console.log(obj); // String {'123'}
+// console.log(obj); // String {'123'}
 
 obj = {}; //  << 객체 리터럴
+
+/**
+ * 내부적으론 생성자 함수를 사용한 것과 리터럴을 사용한 것의 차이는 없다. 세부적인 차이만 있을뿐.
+ * 프로토 타입과 생성자 함수는 단독으로 존재할 수 없으며, 항상 쌍으로 존재한다.
+ * 프로토 타입은 생성자 함수가 생성되는 시점에 더불어 생성된다.
+ * 생성자 함수로써 호출할 수 있는 함수 (contructor)는 함수 정의가 평가되어 함수 객체를 생성하는 시점에서 프로토타입도 생성된다.
+ */
+
+// [[constructor]]
+// console.dir(PersonFn2.prototype); // node 환경이여서 {}
+
+function PersonFn2(name) {
+  // JS 엔진이 함수를 평가할 때 호이스팅해가서 평가를 하는데 이때 프로토타입이 생성.
+  this.name = name;
+}
+
+// [[non-constructor]]
+const PersonFn3 = (name) => {
+  this.name = name;
+};
+
+// console.dir(PersonFn3.prototype); // undefiend
+
+// 객체를 생성할때 OrdinaryObjectCreate가 공통적으로 사용되는데, 이 객체가 동작할때 매개변수로 prototype에 대한 값도 받아오기 떄문에 이 값을 내부적으로 [[Prototype]]내부슬롯에 할당해준다.
+
+/**
+ * 객체 생성 방법
+ * 객체 리터럴 ( = {} )
+ * Object 생성자 함수 ( new Object )
+ * 생성자 함수 ( function ooo() {}; new ooo();)
+ * Object.create
+ * class(ES6)
+ */
+
+// 생성자 함수 사용 방식.
+function PersonFn4(name) {
+  this.name = name;
+}
+
+me = new PersonFn4("dong");
+// console.log(me); // prototpye === PersonFn4
+
+const PersonFn5 = (function () {
+  function Person(name) {
+    this.name = name;
+  }
+  // Person.prototype.sayHello = function () {
+  //   console.log("Hello my name is " + this.name);
+  // };
+
+  Person.prototype = {
+    constructor: Person,
+    sayHello() {
+      console.log(`name - ${this.name}`);
+    },
+  };
+
+  return Person;
+})();
+
+const personFn5 = new PersonFn5("CHOI");
+
+// personFn5.sayHello();
+// console.log(personFn5.constructor == PersonFn5); // true
+// console.log(personFn5.constructor == Object); // false
+
+const PersonFn6 = (function () {
+  function Person(name) {
+    this.name = name;
+  }
+
+  return Person;
+})();
+
+const parent6 = {
+  sayHello() {
+    console.log(`name - ${this.name}`);
+  },
+};
+
+const personFn6 = new PersonFn6("Choi");
+Object.setPrototypeOf(personFn6, parent6);
+
+// console.log(personFn6.constructor === Object);
+// console.log(personFn6.constructor === PersonFn6);
+
+// instanceof는 personFn6의 프로토 타입이 우측의 타입을 가지고 있는지를 검증하는 메서드
+// console.log(personFn6 instanceof Object);
+// console.log(personFn6 instanceof PersonFn6);
+
+PersonFn6.prototype = parent6;
+
+// console.log(personFn6 instanceof Object); // true
+// console.log(personFn6 instanceof PersonFn6); // true
+
+function isInstanceOf(instance, constructor) {
+  const target = Object.getPrototypeOf(instance);
+
+  if (target === null) return false;
+
+  return target === constructor.prototype || isInstanceOf(target, constructor);
+}
+
+console.log(isInstanceOf(personFn6, Object)); // true
+console.log(isInstanceOf(personFn6, PersonFn6)); // true햣
