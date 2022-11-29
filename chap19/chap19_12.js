@@ -18,7 +18,6 @@ Person.staticMethod = () => {
 };
 
 const me = new Person("Dong");
-
 Person.staticMethod();
 me.sayHello();
 
