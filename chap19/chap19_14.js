@@ -55,5 +55,15 @@ for (let i = 0; i < arr.length; i++) {
 // arr.forEach((v) => log(v));
 
 for (const v of arr) {
-  log(v);
+  // log(v);
 }
+
+// 이런것들 다 빼고 그냥 Object.keys,values,entries 써라
+log(Object.keys(person));
+log(Object.values(person));
+log(Object.entries(person));
+
+for (const [key, value] of Object.entries(person)) {
+  log(key, value);
+}
+Object.entries(person).forEach(([k, v]) => log(k, v));
