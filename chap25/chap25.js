@@ -103,3 +103,38 @@ const derived2 = new Derived2();
 console.log(derived2);
 console.log(derived2 instanceof Base1); // true
 console.log(derived2 instanceof Base2); // false
+
+class Base3 {
+  constructor(name) {
+    this.name = name;
+  }
+
+  sayHi() {
+    return `${this.name} Hi!`;
+  }
+}
+
+class Child extends Base3 {
+  sayHello() {
+    // super가 수퍼클래스의 메서드 바인딩된 객체 (superclass.prototype)에 참조할 수 있어야 함
+    // return `${super.sayHi()} and Hello!`;
+    // 아래와 동일
+
+    /**
+     * super를 참조하고 있는 메서드는 내부슬롯 [[HomeObject]] 가지고잇음
+     * [[HomeObject]]는 메서드 자신을 바인딩하고 있는 객체를 가리킨다. (sayHi는 Base3.prototype에 대한 정보를 가지고 있음)
+     * super.sayHi === Base3.prototype.sayHi
+     * 주의: ES6의 메서드 축약표현만 [[HomeObject]]를 가짐
+     */
+    const __super = Object.getPrototypeOf(Child.prototype);
+    return `${__super.sayHi.call(this)} and Hello!`;
+  }
+}
+/* const j = {
+  test : function() {}; [[HomeObject]] 없음
+  test() {} [[HomeObject]] 있음
+}; */
+
+const child = new Child("Dong");
+console.log(child.sayHello());
+console.log(Object.getPrototypeOf(Child.prototype) === Base3.prototype); // true
