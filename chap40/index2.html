@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button>0</button>
+    <button id="alert1">alert</button>
+    <button id="alert2">custom</button>
+    <script>
+      class Btn {
+        constructor() {
+          this.$button = document.querySelector("button");
+          this.count = 0;
+
+          this.$button.onclick = this.increase;
+          // this.$button.onclick = this.increase.bind(this); // => prototype method
+        }
+
+        increase = () => (this.$button.textContent = ++this.count); // instance method
+
+        /* increase() {
+          this.$button.textContent = ++this.count;
+          console.log(this);
+        } */
+      }
+      const btn = new Btn();
+
+      const $btn1 = document.getElementById("alert1");
+      // 얘는 비동기
+      $btn1.addEventListener("click", (e) => {
+        alert("Hello");
+      });
+
+      // $btn1.dispatchEvent(new MouseEvent("click")); // 동기 방식으로 호출한다.
+
+      // custom Event는 반드시 addEventListener를 사용해야하는게 커스텀한 동작 키값이 이벤트 핸들러 Attribute랑 Property에 존재 안하니깐 그럼.
+      const $btn2 = document.getElementById("alert2");
+      $btn2.addEventListener("foo", (e) => {
+        alert(e.detail.text);
+      });
+
+      const foo = new CustomEvent("foo", {
+        detail: {
+          text: "Default Message",
+        },
+      });
+
+      $btn2.dispatchEvent(foo);
+    </script>
+  </body>
+</html>
