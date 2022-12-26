@@ -4,8 +4,10 @@
   "description": "Modern_Javascript_Deep_Dive",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node chap49/index.js",
+    "build": "webpack -w",
+    "build_babel": "babel chap49 -w -d dist/chap49",
+    "start2": "node dist/chap49/index"
   },
   "repository": {
     "type": "git",
@@ -20,5 +22,16 @@
   "bugs": {
     "url": "https://github.com/kuroneko-s/JS-DeepDive-S/issues"
   },
-  "homepage": "https://github.com/kuroneko-s/JS-DeepDive-S#readme"
+  "homepage": "https://github.com/kuroneko-s/JS-DeepDive-S#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.7",
+    "@babel/preset-env": "^7.20.2",
+    "babel-loader": "^9.1.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1"
+  }
 }
